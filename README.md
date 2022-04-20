@@ -19,7 +19,10 @@ Start JSOn Server
 
 ## start testing
 
+    ng test
+
 - in each file .spec will create a describe and .
 - We will create a file for a each component p.e. cart.
      rute src/app/pages/cart/cart.component.spec.ts
-- 
+- Create file coverage
+    ng test --code-coverage
