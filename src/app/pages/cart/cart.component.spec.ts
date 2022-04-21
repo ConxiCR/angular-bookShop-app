@@ -48,12 +48,19 @@ describe('Cart.component', () => {
             schemas: [CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA]
         });
     });
+    //En el cart.component en ngOnInit se esta llamando al servicio
+    /*ngOnInit(): void {
+        this.listCartBook = this._bookService.getBooksFromCart();
+        this.totalPrice = this.getTotalPrice(this.listCartBook);
+    }*/
 
     beforeEach(() => {
         fixture = TestBed.createComponent(CartComponent);
         component = fixture.componentInstance;
         fixture.detectChanges();//component ngOnit
         service = fixture.debugElement.injector.get(BookService);
+        //de esta manera el onInit no esta llamando al servicio para testear
+        spyOn(service, 'getBooksFromCart').and.callFake(()=> listBook);
     });
     it('should create', () => {
         //esperamos a que ocurra algo con expect. Que el componet este instanciado correctamente
@@ -193,5 +200,6 @@ describe('Cart.component', () => {
         expect(component.listCartBook.length).toBe(0);
         expect(spy1).toHaveBeenCalled();
     });
+
 
 });
