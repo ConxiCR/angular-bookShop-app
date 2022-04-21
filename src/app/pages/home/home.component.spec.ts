@@ -1,0 +1,87 @@
+import { HomeComponent } from './home.component';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA } from '@angular/core';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { BookService } from '../../services/book.service';
+import { Book } from '../../models/book.model';
+import { of } from 'rxjs';
+
+const listBook: Book[] = [
+    {
+        name: '',
+        author: '',
+        isbn: '',
+        price: 15,
+        amount: 2
+    },
+    {
+        name: '',
+        author: '',
+        isbn: '',
+        price: 20,
+        amount: 1
+    },
+    {
+        name: '',
+        author: '',
+        isbn: '',
+        price: 8,
+        amount: 7
+    }
+];
+
+describe('home component', () => {
+
+    let component: HomeComponent;
+    let fixture: ComponentFixture<HomeComponent>;
+
+    beforeEach(()=> {
+        TestBed.configureTestingModule({
+            imports:[
+                HttpClientTestingModule
+            ],
+            declarations:[
+                HomeComponent
+            ],
+            providers:[
+                BookService
+            ],
+            schemas: [CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA]
+
+        }).compileComponents();
+    });
+    //instancia componente
+    beforeEach(() => {
+        fixture = TestBed.createComponent(HomeComponent);
+        component = fixture.componentInstance;
+        fixture.detectChanges();
+    });
+    //confirmación de creación correcta
+    it('should create', () => {
+        expect(component).toBeTruthy();
+    });
+    //el método se subscribe una vez
+    /*public getBooks(): void {
+        this.bookService.getBooks().pipe(take(1)).subscribe((resp: Book[]) => {
+          this.listBook = resp;
+        });
+      }*/
+    it('getBooks get books from the subscription', () => {
+        //1º traer  el servicio
+        const bookService = fixture.debugElement.injector.get(BookService)
+        //para probar la array vacia
+        //const listBook: Book[] = [];
+        //primero espiamos al método y luego va a devolver un observable de tipo listBook
+        const spy1 = spyOn(bookService,'getBooks').and.returnValue(of(listBook));
+        component.getBooks();//si getBooks trae un array vacio
+
+        expect(spy1).toHaveBeenCalled();
+        //expect(component.listBook.length).toBe(0);//array vacia
+        expect(component.listBook.length).toBe(3);
+    });
+
+
+
+
+
+});
