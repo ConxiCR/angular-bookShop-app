@@ -29,6 +29,10 @@ const listBook: Book[] = [
         amount: 7
     }
 ];
+//objeto con los métodos que se necesitan del servicio. Si hubieran más se incorporarian
+const BookServiceMock = {
+    getBooks: () => of(listBook),
+};
 
 describe('home component', () => {
 
@@ -44,8 +48,17 @@ describe('home component', () => {
                 HomeComponent
             ],
             providers:[
-                BookService
+                //BookService //1ª opción
+
+                //Mock Service //2ª opción
+                //cuando el component necesite este servicio utilice el objeto creado del método `getBooks`
+                //le decimos que en lugar de utilizar el `BookService`original utilice el que se ha creado
+                {
+                    provide: BookService,
+                    useValue: BookServiceMock
+                }
             ],
+
             schemas: [CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA]
 
         }).compileComponents();
@@ -72,13 +85,17 @@ describe('home component', () => {
         //para probar la array vacia
         //const listBook: Book[] = [];
         //primero espiamos al método y luego va a devolver un observable de tipo listBook
-        const spy1 = spyOn(bookService,'getBooks').and.returnValue(of(listBook));
+        //con el nuevo servicio no se necesita este espia
+        //const spy1 = spyOn(bookService,'getBooks').and.returnValue(of(listBook));
         component.getBooks();//si getBooks trae un array vacio
 
-        expect(spy1).toHaveBeenCalled();
+        //con el nuevo servicio no se necsita este expect
+        //expect(spy1).toHaveBeenCalled();
         //expect(component.listBook.length).toBe(0);//array vacia
         expect(component.listBook.length).toBe(3);
     });
+    //creación servicio mock para el caso de muchos métodos del mismo servicio
+
 
 
 
