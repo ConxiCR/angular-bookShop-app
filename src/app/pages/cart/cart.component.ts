@@ -37,7 +37,7 @@ export class CartComponent implements OnInit {
     this.totalPrice = this.getTotalPrice(this.listCartBook);
   }
 
-  /*public onClearBooks(): void {
+  public onClearBooks(): void {
     if (this.listCartBook && this.listCartBook.length > 0) {
       this._clearListCartBook();
     } else {
@@ -48,7 +48,7 @@ export class CartComponent implements OnInit {
   private _clearListCartBook() {
     this.listCartBook = [];
     this._bookService.removeBooksFromCart();
-  }*/
+  }
 
 
 }

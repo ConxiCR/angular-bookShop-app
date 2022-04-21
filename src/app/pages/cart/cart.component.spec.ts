@@ -30,7 +30,7 @@ const listBook: Book[] = [
 ];
 describe('Cart.component', () => {
 
-    let component: CartComponent;
+    let component: CartComponent;//declaramos el componente de tipo que queremos testear y lo importamos
     let fixture: ComponentFixture<CartComponent>;//para extraer el servicio
     let service: BookService;
     //TestBed
@@ -54,10 +54,19 @@ describe('Cart.component', () => {
         component = fixture.componentInstance;
         fixture.detectChanges();//component ngOnit
         service = fixture.debugElement.injector.get(BookService);
-    })
+    });
     it('should create', () => {
+        //esperamos a que ocurra algo con expect. Que el componet este instanciado correctamente
         expect(component).toBeTruthy();
     });
+    //Método a testear viene de cart.component.ts
+    /*public getTotalPrice(listCartBook: Book[]): number {
+        let totalPrice = 0;
+        listCartBook.forEach((book: Book) => {
+          totalPrice += book.amount * book.price;
+        });
+        return totalPrice;
+      }*/
     //test method with return
     it('getTotalPrice returns and amount', () => {
         const totalPrice = component.getTotalPrice(listBook);
@@ -68,12 +77,14 @@ describe('Cart.component', () => {
         //no va a ser nulo. Con el not delante se hace la negación del método
         expect(totalPrice).not.toBeNull();
     });
+    //Método a testear viene de cart.component.ts
     /*public onInputNumberChange(action: string, book: Book): void {
         const amount = action === 'plus' ? book.amount + 1 : book.amount - 1;
         book.amount = Number(amount);
         this.listCartBook = this._bookService.updateAmountBook(book);
         this.totalPrice = this.getTotalPrice(this.listCartBook);
       }*/
+    
     //test method without return. Every time we press plus
     it('onInputNumberChange increments correctly', () => {
         //we need action: string and book: Book
@@ -112,15 +123,12 @@ describe('Cart.component', () => {
         expect(spy1).toHaveBeenCalled();
         expect(spy2).toHaveBeenCalled();
 
-
-
-
-
     });
     //test method without return. Every time we press minus
     it('onInputNumberChange decrements correctly', () => {
         
         const action = 'minus';
+        //creamos una constante para no depender de la referencia a la lista que puede cambiar o no
         const book = {
             name: '',
             author: '',
@@ -129,7 +137,8 @@ describe('Cart.component', () => {
             amount: 3
         };
 
-        const spy1 = spyOn(service, 'updateAmountBook').and.callFake(() => null);//se hace una llamada falsa. no llama al servicio real
+        //se llama espia al método y se cambia por otro método
+        const spy1 = spyOn(service, 'updateAmountBook').and.callFake(() => null);//se hace una llamada falsa. no llama al servicio real. El servicio esta fuera
         const spy2 = spyOn(component, 'getTotalPrice').and.callFake(() => null);
         
         //testeamos si realmente decrementa
@@ -143,11 +152,46 @@ describe('Cart.component', () => {
         expect(spy1).toHaveBeenCalled();
         expect(spy2).toHaveBeenCalled();
 
-
-
-
-
     });
+    /*public onClearBooks(): void {
+        if (this.listCartBook && this.listCartBook.length > 0) {
+          this._clearListCartBook();
+        } else {
+           console.log("No books available");
+        }
+      }
+    
+      private _clearListCartBook() {
+        this.listCartBook = [];
+        this._bookService.removeBooksFromCart();
+      }*/
+    
+    //test private method
+    //a un método privado no se puede acceder directamente. Provamos el método publico para poder acceder al privado
+    it('onClearBooks works correctly', () => {
+        //llamamos al spy para acceder a un método  privado. Se declara antes del método. El método se va a espiar y a llamar.
+        const spy1 = spyOn((component as any), '_clearListCartBook').and.callThrough();//cuando se llama a una lista llena hay que comprobar si se llama al método privado
+        //espia y anula lo que haga el servicio
+        const spy2 = spyOn(service, 'removeBooksFromCart').and.callFake(() => null);
+        component.listCartBook = listBook;//Se llama a la lista del carrito igualándola a la lista  de libros que se ha creado arriba
+        console.log(component.listCartBook.lastIndexOf);
+        component.onClearBooks();//llamamos al método
 
+        console.log('after ' + component.listCartBook.lastIndexOf);
+        //dos posibilidades para lo conseguir lo mismo
+        expect(component.listCartBook.length).toBe(0);//comprobar que la lista se ha vaciado. La lista del carrito este a 0
+        expect(component.listCartBook.length === 0).toBeTrue();//que la condición sea verdadera
+        expect(spy1).toHaveBeenCalled();
+        expect(spy2).toHaveBeenCalled();
+    });
+    it('_clearListCartBook works correctly', () => {
+
+        const spy1 = spyOn(service, 'removeBooksFromCart').and.callFake(() => null);
+        component.listCartBook = listBook;
+        component['_clearListCartBook']();
+
+        expect(component.listCartBook.length).toBe(0);
+        expect(spy1).toHaveBeenCalled();
+    });
 
 });
