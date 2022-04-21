@@ -1,10 +1,11 @@
 import { HomeComponent } from './home.component';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA } from '@angular/core';
+import { CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA, Pipe, PipeTransform } from '@angular/core';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { BookService } from '../../services/book.service';
 import { Book } from '../../models/book.model';
 import { of } from 'rxjs';
+
 
 const listBook: Book[] = [
     {
@@ -33,6 +34,13 @@ const listBook: Book[] = [
 const BookServiceMock = {
     getBooks: () => of(listBook),
 };
+//mock pipe
+@Pipe({name: 'reduceText'})
+class ReduceTextPipeMock implements PipeTransform {
+    transform(): string {
+        return '';
+    }
+}
 
 describe('home component', () => {
 
@@ -45,7 +53,8 @@ describe('home component', () => {
                 HttpClientTestingModule
             ],
             declarations:[
-                HomeComponent
+                HomeComponent,
+                ReduceTextPipeMock
             ],
             providers:[
                 //BookService //1ª opción
@@ -89,7 +98,7 @@ describe('home component', () => {
         //const spy1 = spyOn(bookService,'getBooks').and.returnValue(of(listBook));
         component.getBooks();//si getBooks trae un array vacio
 
-        //con el nuevo servicio no se necsita este expect
+        //con el nuevo servicio no se necesita este expect
         //expect(spy1).toHaveBeenCalled();
         //expect(component.listBook.length).toBe(0);//array vacia
         expect(component.listBook.length).toBe(3);
