@@ -26,3 +26,7 @@ Start JSOn Server
      rute src/app/pages/cart/cart.component.spec.ts
 - Create file coverage
     ng test --code-coverage
+
+### important ###
+>Los test no siempre se relizan paralelamente
+>
