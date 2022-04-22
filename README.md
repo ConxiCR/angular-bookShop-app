@@ -27,6 +27,7 @@ Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.
 - We will create a file for a each component p.e. cart.
      rute src/app/pages/cart/cart.component.spec.ts
 - Create file coverage
+  
     ng test --code-coverage
 
 ### important ###
