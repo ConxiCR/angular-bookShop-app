@@ -31,8 +31,9 @@ Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.
     ng test --code-coverage
 
 ### important ###
->Los test no siempre se relizan paralelamente
->
+
+>Tests are not always done in parallel
+
 # BookShopApp
 
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli)
