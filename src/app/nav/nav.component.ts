@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-nav',
@@ -7,7 +8,13 @@ import { Component, OnInit } from '@angular/core';
 })
 export class NavComponent implements OnInit {
 
-  constructor() { }
+  //inyección del router
+  constructor(private router: Router) {}
+
+  //método para hacer la navegación. Recibimos un path por parámetro y nos dirigimos hacía él
+  navTo(path: string): void {
+    this.router.navigate([`/${path}`]);
+  }
 
   ngOnInit(): void {
   }

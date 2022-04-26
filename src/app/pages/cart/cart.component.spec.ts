@@ -40,11 +40,11 @@ describe('Cart.component', () => {
                 HttpClientTestingModule//no es una petición real
             ],
             declarations: [
-                //CartComponent
+                CartComponent
             ],
             providers: [
                 BookService,
-                CartComponent
+                //CartComponent
             ],
             schemas: [CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA]
         });
@@ -63,13 +63,13 @@ describe('Cart.component', () => {
         //de esta manera el onInit no esta llamando al servicio para testear
         spyOn(service, 'getBooksFromCart').and.callFake(()=> listBook);
     });
-    /*fit('should create', () => {
+    it('should create', () => {
         //esperamos a que ocurra algo con expect. Que el componet este instanciado correctamente
         expect(component).toBeTruthy();
-    });*/
-    it('should create', inject([CartComponent], (testComponent: CartComponent) => {
+    });
+    /*it('should create', inject([CartComponent], (testComponent: CartComponent) => {
         expect(testComponent).toBeTruthy()
-    }));
+    }));*/
     //Método a testear viene de cart.component.ts
     /*public getTotalPrice(listCartBook: Book[]): number {
         let totalPrice = 0;
