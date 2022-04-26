@@ -1,4 +1,4 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, inject, TestBed } from '@angular/core/testing';
 import { CartComponent } from './cart.component';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { BookService } from '../../services/book.service';
@@ -40,10 +40,11 @@ describe('Cart.component', () => {
                 HttpClientTestingModule//no es una petición real
             ],
             declarations: [
-                CartComponent
+                //CartComponent
             ],
             providers: [
-                BookService
+                BookService,
+                CartComponent
             ],
             schemas: [CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA]
         });
@@ -62,10 +63,13 @@ describe('Cart.component', () => {
         //de esta manera el onInit no esta llamando al servicio para testear
         spyOn(service, 'getBooksFromCart').and.callFake(()=> listBook);
     });
-    it('should create', () => {
+    /*fit('should create', () => {
         //esperamos a que ocurra algo con expect. Que el componet este instanciado correctamente
         expect(component).toBeTruthy();
-    });
+    });*/
+    it('should create', inject([CartComponent], (testComponent: CartComponent) => {
+        expect(testComponent).toBeTruthy()
+    }));
     //Método a testear viene de cart.component.ts
     /*public getTotalPrice(listCartBook: Book[]): number {
         let totalPrice = 0;
