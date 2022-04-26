@@ -38,7 +38,7 @@ const book: Book =  {
 };
 
 
-fdescribe('BookService', () => {
+describe('BookService', () => {
 
     let service: BookService;
     let httpMock: HttpTestingController;//peticiones mock, no reales
@@ -173,6 +173,21 @@ fdescribe('BookService', () => {
         service.addBookToCart(book);
         expect(spy1).toHaveBeenCalled();
 
+    });
+    /*public removeBooksFromCart(): void {
+        localStorage.setItem('listCartBook', null);
+    }*/
+    //comprobación del borrar libros. 1º hemos de crear algo para después acabar borrándolo
+    it('removeBooksFromCart removes the list from localStorage', ()=> {
+        service.addBookToCart(book);
+        //traemos la lista de libros
+        let listBook = service.getBooksFromCart();
+        expect(listBook.length).toBe(1);
+        //eliminar lista del localStorage
+        service.removeBooksFromCart();
+        //llamamos a la lista de libros para actualizar la lista
+        listBook = service.getBooksFromCart();
+        expect(listBook.length).toBe(0);//testeamos que la lista este a 0 después del borrado
     });
 
 
