@@ -7,6 +7,7 @@
     "build": "ng build",
     "test": "ng test",
     "test-coverage": "ng test --code-coverage",
+    "testbuild": "ng test --no-watch && ng build",
     "lint": "ng lint",
     "e2e": "ng e2e",
     "mock": "json-server db.json"
