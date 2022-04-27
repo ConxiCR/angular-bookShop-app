@@ -2,10 +2,11 @@ import { ComponentFixture, inject, TestBed } from '@angular/core/testing';
 import { CartComponent } from './cart.component';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { BookService } from '../../services/book.service';
-import { CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA } from '@angular/core';
+import { CUSTOM_ELEMENTS_SCHEMA, DebugElement, NO_ERRORS_SCHEMA } from '@angular/core';
 import { Book } from '../../models/book.model';
 import { MatDialog } from '@angular/material/dialog';
 import { of } from 'rxjs';
+import { By } from '@angular/platform-browser';
 
 const listBook: Book[] = [
     {
@@ -243,5 +244,33 @@ describe('Cart.component', () => {
         }
     }*/
 
+    /*testing del título "el carro esta vacío". Cuando haya una lista no estará disponible.
+     */
+    it('The title "The cart is empty" is not diplayed when there is a list', () => {
+        //añadimos una lista
+        component.listCartBook = listBook;
+        //detección de cambios
+        fixture.detectChanges;
+        //traemos el elemento. Como es un id utilizamos ``, pero puede ser una clase, una etiqueta(h5)
+        const debugElement: DebugElement = fixture.debugElement.query(By.css(`titleCartEmpty`));
+        //el elemento no debería existir, por tanto el expect va a indicar que el debugElement no va a estar instanciado
+        expect(debugElement).toBeFalsy();
+    });
+    it('The title "The cart is empty" is displayed correctly when the list is empty', () => {
+        //lista vacía
+        component.listCartBook = [];
+        //detección de cambios
+        fixture.detectChanges();
+        //traemos el debugElement
+        const debugElement: DebugElement = fixture.debugElement.query(By.css(`titleCartEmpty`));
+        //comprobamos que debugElement exista
+        expect(debugElement).toBeFalsy();
+        //comprobamos que debugElemeny exista y extraemos el texto
+        if(debugElement){
+            const element: HTMLElement = debugElement.nativeElement;
+            expect(element.innerHTML).toContain("The cart is empty");
+        }
+
+    });
 
 });
