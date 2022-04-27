@@ -4,6 +4,8 @@ import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { BookService } from '../../services/book.service';
 import { CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA } from '@angular/core';
 import { Book } from '../../models/book.model';
+import { MatDialog } from '@angular/material/dialog';
+import { of } from 'rxjs';
 
 const listBook: Book[] = [
     {
@@ -28,6 +30,18 @@ const listBook: Book[] = [
         amount: 7
     }
 ];
+/*constante que devuelve un open que a su vez tiene que devolver un afterClose que nos va a devolver un observable.
+El observable lo ejecutamos con "of()"" y el valor que se quiere devolver. Cuando afterClosed devuelve un observable
+que es de tipo booleano. Si es true va a ejecutar el clearListCartBook que es lo que se ha roto al 
+incluir el MatDialog */
+const MatDialogMock = {
+    open(){
+        return{
+            afterClosed: ()=> of(true)
+        };
+    }
+}
+
 describe('Cart.component', () => {
 
     let component: CartComponent;//declaramos el componente de tipo que queremos testear y lo importamos
@@ -45,6 +59,9 @@ describe('Cart.component', () => {
             providers: [
                 BookService,
                 //CartComponent
+                {
+                    provide: MatDialog,  useValue: MatDialogMock
+                }
             ],
             schemas: [CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA]
         });
@@ -204,6 +221,27 @@ describe('Cart.component', () => {
         expect(component.listCartBook.length).toBe(0);
         expect(spy1).toHaveBeenCalled();
     });
+    /*error _dialog.open para hace un nuevo mock. Mirar const MatDialogMock
+    en el método en que borra libros llama al método "open". Que se esta guardando en dialogRef que tiene un método 
+    afterClosed que es un observable. Por lo que necesitaremos un return.
+    public onClearBooks(): void {
+        if(this.listCartBook?.length > 0){
+          const dialogRef = this._dialog.open(ConfirmDialogComponent, {
+            maxWidth: '400px',
+            data: {
+              title: '¿Etás seguro?',
+              message: '¿Desea eliminar todos los productos del carrito?',
+            }
+          });
+          dialogRef.afterClosed().subscribe((dialogResult: boolean) => {
+            if(dialogResult){
+              this._clearListCartBook();
+            }
+          });
+        }else {
+           console.log("No books available");
+        }
+    }*/
 
 
 });
